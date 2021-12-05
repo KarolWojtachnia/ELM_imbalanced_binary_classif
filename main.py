@@ -38,14 +38,17 @@ if __name__ == '__main__':
     #
     # print(accuracy_score(y_test, predictions))
 
-    import glob
-    import os
+    # import glob
+    # import os
+    #
+    # counter = 0
+    # os.chdir("datasets")
+    # for file in glob.glob("*.csv"):
+    #     print(file.replace('.csv', ''))
+    #     counter += 1
+    # print(counter)
 
-    counter = 0
-    os.chdir("datasets")
-    for file in glob.glob("*.csv"):
-        print(file)
-        counter += 1
-    print(counter)
+    import numpy as np
+    print(np.random.uniform(size = [3,4]))
 
 

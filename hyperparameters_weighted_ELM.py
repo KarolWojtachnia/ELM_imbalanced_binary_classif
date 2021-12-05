@@ -34,14 +34,13 @@ metrics = {
 }
 
 datasets_names = []
-counter = 0
 os.chdir("datasets")
 for file in glob.glob("*.csv"):
     datasets_names.append(file)
 os.chdir("..")
 
-n_splits = 5
-n_repeats = 2
+n_splits = 2
+n_repeats = 5
 
 for i in range(len(datasets_names)):
 
@@ -49,9 +48,8 @@ for i in range(len(datasets_names)):
     dataset = np.genfromtxt("datasets\%s" % dataset_name, delimiter=",")
     X = dataset[:, :-1]
     y = dataset[:, -1].astype(int)
-    for i in range(y.shape[0]):
-        if y[i] == 0:
-            y[i] = -1
+
+    y[y==0] = -1
 
     rskf = RepeatedStratifiedKFold(
         n_splits=n_splits, n_repeats=n_repeats, random_state=58)
@@ -61,18 +59,19 @@ for i in range(len(datasets_names)):
     for fold_id, (train, test) in enumerate(rskf.split(X, y)):
         for ELM_id, ELM in enumerate(ELMs):
             clf = clone(ELMs[ELM])
-            X_train, y_train = X[train], y[train]
-            clf.fit(X_train, y_train)
+
+            clf.fit(X[train], y[train])
             y_pred = clf.predict(X[test])
-            for i in range(len(y_pred)):
-                if y_pred[i] == -1:
-                    y_pred[i] = 0
+
+            y_true = np.copy(y)
+            y_true[y_true == -1] = 0
+            y_pred[y_pred == -1] = 0
 
             for metric_id, metric in enumerate(metrics):
-                scores[ELM_id, fold_id, metric_id] = metrics[metric](y[test], y_pred)
+                scores[ELM_id, fold_id, metric_id] = metrics[metric](y_true[test], y_pred)
 
     scores[np.isnan(scores)] = 0
+    np.save(f'weighted_results_np/results_{dataset_name.replace(".csv", "")}', scores)
+    mean_scores = np.mean(scores, axis=1)
 
-    mean_scores1 = np.mean(scores, axis=1)
-
-    np.savetxt('weighted_results/resultsOf_%s' % dataset_name, mean_scores1, delimiter=",")
+    np.savetxt(f'weighted_mean_results/results_{dataset_name}', mean_scores, delimiter=",")

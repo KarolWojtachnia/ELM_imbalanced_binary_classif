@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from math import pi
 
-# scores = np.genfromtxt("weighted_results/resultsOf_ecoli-0-3-4-7_vs_5-6.csv", delimiter=",")
-scores = pd.read_csv("weighted_results/resultsOf_ecoli-0-3-4-7_vs_5-6.csv", header=None, delimiter=',')
+# scores = np.genfromtxt("weighted_mean_results/resultsOf_ecoli-0-3-4-7_vs_5-6.csv", delimiter=",")
+scores = pd.read_csv("weighted_mean_results/resultsOf_ecoli-0-3-4-7_vs_5-6.csv", header=None, delimiter=',')
 # scores = scores.T
 # metryki i metody
 metrics = ["Recall", 'Precision', 'Specificity', 'F1', 'G-mean', 'BAC']

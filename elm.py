@@ -3,7 +3,7 @@ import numpy as np
 from numpy.linalg import inv as inv
 from numpy.linalg import multi_dot as multi_dot
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
-from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.base import BaseEstimator, ClassifierMixin, clone
 
 
 def relu(x):
@@ -29,15 +29,19 @@ class ExtremeLearningMachine(BaseEstimator, ClassifierMixin):
 
     def fit(self, X, y):
 
-        #Input validation, this implementation
+        new_y = y
+        new_y[new_y == 0] = -1
+        new_y[new_y > 0] = 1
+
         for i in range(len(y)):
-            if y[i] != 1 and y[i] != -1:
+            if new_y[i] != 1 and new_y[i] != -1:
                 sys.exit('This implementation of ELM requires -1 for negative class and 1 for positive class')
 
-        self.X_, self.y_ = check_X_y(X, y)
+        self.X_, self.y_ = check_X_y(X, new_y)
         self.training_samples = self.X_.shape[0]
         self.input_units = self.X_.shape[1]
-        self.input_weights = np.random.uniform(size=[self.hidden_units, self.input_units])
+        self.input_weights = \
+            np.random.uniform(size=[self.hidden_units, self.input_units])
         self.biases = np.random.uniform(size=[self.hidden_units])
 
         input_dot_product = np.dot(self.X_, self.input_weights.T)
@@ -58,19 +62,27 @@ class ExtremeLearningMachine(BaseEstimator, ClassifierMixin):
                     self.W[i, i] = negative_ratio
 
             if self.training_samples < self.hidden_units:
-                inverse_complicated_part = inv(np.eye(self.training_samples) / self.C + multi_dot([self.W, self.H, self.H.T]))
-                self.output_weights = multi_dot([self.H.T, inverse_complicated_part, self.W, self.y_])
+                inverse_complicated_part = \
+                    inv(np.eye(self.training_samples) / self.C + multi_dot([self.W, self.H, self.H.T]))
+                self.output_weights = \
+                    multi_dot([self.H.T, inverse_complicated_part, self.W, self.y_])
             else:
-                inverse_complicated_part = inv(np.eye(self.hidden_units) / self.C + multi_dot([self.H.T, self.W, self.H]))
-                self.output_weights = multi_dot([inverse_complicated_part, self.H.T, self.W, self.y_])
+                inverse_complicated_part = \
+                    inv(np.eye(self.hidden_units) / self.C + multi_dot([self.H.T, self.W, self.H]))
+                self.output_weights = \
+                    multi_dot([inverse_complicated_part, self.H.T, self.W, self.y_])
 
         else:
             if self.training_samples < self.hidden_units:
-                inverse_complicated_part = inv(np.eye(self.training_samples) / self.C + multi_dot([self.H, self.H.T]))
-                self.output_weights = multi_dot([self.H.T, inverse_complicated_part, self.y_])
+                inverse_complicated_part =\
+                    inv(np.eye(self.training_samples) / self.C + multi_dot([self.H, self.H.T]))
+                self.output_weights = \
+                    multi_dot([self.H.T, inverse_complicated_part, self.y_])
             else:
-                inverse_complicated_part = inv(np.eye(self.hidden_units) / self.C + multi_dot([self.H.T, self.H]))
-                self.output_weights = multi_dot([inverse_complicated_part, self.H.T, self.y_])
+                inverse_complicated_part = \
+                    inv(np.eye(self.hidden_units) / self.C + multi_dot([self.H.T, self.H]))
+                self.output_weights = \
+                    multi_dot([inverse_complicated_part, self.H.T, self.y_])
         return self
 
     def predict(self, X):

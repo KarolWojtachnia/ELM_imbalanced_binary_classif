@@ -131,3 +131,4 @@ dmypy.json
 # Numpy stuff
 .npy/
 .idea/
+bar.png
