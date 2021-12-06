@@ -8,8 +8,8 @@ from tabulate import tabulate
 
 datasets_names = []
 
-dir_name = 'results_np'
-# dir_name = 'weighted_results_np'
+# dir_name = 'results_np'
+dir_name = 'weighted_results_np'
 os.chdir(dir_name)
 for file in glob.glob("*.npy"):
     datasets_names.append(file)
@@ -44,11 +44,11 @@ for dataset_id, name in enumerate(datasets_names):
     ranks_all_datasets.append(rankdata(mean_results).tolist())
 
 ranks_all_datasets = np.array(ranks_all_datasets)
-# print(f"Ranks among all datasets: {ranks_all_datasets}")
+# print(f"Ranks among all datases: {ranks_all_datasets}")
 mean_ranks = np.mean(ranks_all_datasets, axis=0)
-
+print(f"Mean ranks among all datasets: {mean_ranks}")
 mean_all_mean_results = np.mean(np.array(all_mean_results), axis=0)
-print(f"Mean results of all datasets: {mean_all_mean_results}")
+# print(f"Mean results of all datasets: {mean_all_mean_results}")
 
 alfa = .05
 w_statistic = np.zeros((15, 15))

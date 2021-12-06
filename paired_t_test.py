@@ -8,8 +8,8 @@ from scipy.stats import ttest_rel
 
 datasets_names = []
 
-#dir_name = 'results_np'
-dir_name = 'weighted_results_np'
+dir_name = 'results_np'
+# dir_name = 'weighted_results_np'
 os.chdir(dir_name)
 for file in glob.glob("*.npy"):
     datasets_names.append(file)
