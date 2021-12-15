@@ -18,10 +18,10 @@ os.chdir("..")
 
 # metric_id = 0 #recall
 # metric_id = 1 #precision
-# metric_id = 2 #specificity
+metric_id = 2 #specificity
 # metric_id = 3  # f1_score
 # metric_id = 4 #g_mean
-metric_id = 5 #bac
+# metric_id = 5 #bac
 
 headers = ["no W", "W"]
 
@@ -56,7 +56,7 @@ t_statistic_table = np.concatenate((names_column, t_statistic), axis=1)
 t_statistic_table = tabulate(t_statistic_table, headers, floatfmt=".2f")
 p_value_table = np.concatenate((names_column, p_value), axis=1)
 p_value_table = tabulate(p_value_table, headers, floatfmt=".2f")
-
+# print(p_value_table)
 advantage = np.zeros((20, 2))
 advantage[t_statistic > 0] = 1
 advantage_table = tabulate(np.concatenate(
